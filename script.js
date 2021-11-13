@@ -3,34 +3,20 @@ const cartTable = document.getElementById("cartTable");
 const createOrderButton = document.getElementById("createOrderButton");
 const totalPriceLabel = document.getElementById("totalPriceLabel");
 let totalPrice = 0;
-const json = {
-    "products": [
-        {
-            "name": "redbull",
-            "unit_price": 5000,
-            "stock": 5
-        },
-        {
-            "name": "rice",
-            "unit_price": 2000,
-            "stock": 0
-        },
-        {
-            "name": "papitas de limón margarita",
-            "unit_price": 1500,
-            "stock": 1
-        },
-        {
-            "name": "meat",
-            "unit_price": 500,
-            "stock": 8
-        },
-    ]
-}
-const products = json.products;
+let jsonObject;
+let products;
 
 // ON STARTUP
-fillProductList();
+fetch("./data.json")
+    .then(function(resp) {
+        return resp.json();
+    })
+    .then(function(data) {
+        jsonObject = data;
+        products = jsonObject.products;
+        fillProductList();
+    });
+
 
 
 // FUNCTIONS
@@ -47,11 +33,10 @@ function fillProductList() {
     });
 }
 
-
 // EVENT LISTENERS
 // CREATE ORDEN (.JSON)
 createOrderButton.addEventListener("click", (e) => {
-    console.log("hello");
+    console.log("Crear .JSON file");
 });
 
 // ADD TO CART EVENT
@@ -59,7 +44,7 @@ productList.addEventListener("click", (e) => {
     if (e.target.tagName == "BUTTON") {
         let parentNode = e.target.parentNode;
         if (!parentNode.disabled) {
-            let productIndex = products.findIndex(x => x.name === parentNode.children[0].innerHTML.toLowerCase());
+            let productIndex = products.findIndex(x => x.name === parentNode.children[0].innerHTML);
             let productName = products[productIndex].name;
             let productAmount = parentNode.children[2].value;
             let productPrice = products[productIndex].unit_price;

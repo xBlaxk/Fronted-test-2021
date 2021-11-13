@@ -1,0 +1,121 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin: 0px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+.alternova_shopLogo {
+    display: block;
+    background-color: black;
+    text-align: center;
+    width: 60%;
+    padding: 30px 20%;
+    margin-bottom: 50px;
+}
+
+.products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 50%;
+}
+
+.product_item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 180px;
+    height: 300px;
+    margin: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 3px solid rgb(165, 165, 165);
+}
+
+.product_unavaliable {
+    filter: grayscale(1);
+}
+
+.item_name {
+    width: 100%;
+    text-align: center;
+    margin: 10px 0px;
+}
+
+.item_image {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+}
+
+.item_quantity {
+    width: 25%;
+    margin: 5px 0px;
+    text-align: center;
+    border: 2px solid grey;
+}
+
+.item_addButton {
+    width: 60%;
+    margin: 5px 0px;
+    text-align: center;
+}
+
+.shopping_cart {
+    width: 540px;
+    padding: 20px;
+    border: 3px solid rgb(165, 165, 165);
+    border-radius: 10px;
+    margin: 20px;
+
+}
+
+.cart_table {
+    width: 100%;
+}
+
+.cart_title {
+    text-align: center;
+}
+
+.cart_table > tbody > tr:nth-child(odd) {
+    background-color: bisque;
+    text-align: center;
+}
+.cart_table > tbody > tr:nth-child(even) {
+    background-color: rgb(201, 194, 186);
+    text-align: center;
+
+}
+
+.cart_table > tbody > tr {
+    height: 40px;
+}
+
+.cart_ui {
+    display: flex;
+    margin-bottom: auto;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.cart_ui > div {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

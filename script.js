@@ -24,16 +24,35 @@ const json = {
             "name": "meat",
             "unit_price": 500,
             "stock": 8
-        }
+        },
     ]
 }
 const products = json.products;
 
+// ON STARTUP
+fillProductList();
+
+
+// FUNCTIONS
+// FILL THE LIST OF PRODUCTS
+function fillProductList() {
+    products.forEach((product) => {
+        productList.innerHTML += '<div class="product_item">' +
+        '<h3 class="item_name"></h3>' +
+        '<img class="item_image" src="img/Blaxk_logo.png" alt="RedBull">' +
+        '<input class="item_quantity" type="number" placeholder="0"></input>' +
+        '<button class="item_addButton">Add to cart</button>' +
+        '</div>';
+        productList.lastChild.children[0].innerHTML = product.name;
+    });
+}
+
+
+// EVENT LISTENERS
 // CREATE ORDEN (.JSON)
 createOrderButton.addEventListener("click", (e) => {
-
+    console.log("hello");
 });
-
 
 // ADD TO CART EVENT
 productList.addEventListener("click", (e) => {

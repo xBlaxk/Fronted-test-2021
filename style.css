@@ -9,6 +9,22 @@ body {
     margin: 0px;
 }
 
+footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: black;
+    height: 30vh;
+}
+
+footer > *{
+    text-align: center;
+    color: white;
+    transform: scale(1.5);
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -30,6 +46,7 @@ input::-webkit-inner-spin-button {
     flex-wrap: wrap;
     justify-content: space-evenly;
     width: 50%;
+    min-height: 80vh;
 }
 
 .product_item {
@@ -119,3 +136,4 @@ input::-webkit-inner-spin-button {
     justify-content: center;
     align-items: center;
 }
+

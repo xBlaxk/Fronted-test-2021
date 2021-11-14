@@ -5,23 +5,23 @@ const totalPriceLabel = document.getElementById("totalPriceLabel");
 let totalPrice = 0;
 let jsonObject;
 let products;
+let shoppingCart = new Map();
 
 // ON STARTUP
+console.log("post-Time");
 fetch("./data.json")
     .then(function(resp) {
         return resp.json();
     })
     .then(function(data) {
         jsonObject = data;
-        products = jsonObject.products;
-        fillProductList();
+        fillProductList(jsonObject.products);
     });
-
 
 
 // FUNCTIONS
 // FILL THE LIST OF PRODUCTS
-function fillProductList() {
+function fillProductList(products) {
     products.forEach((product) => {
         productList.innerHTML += '<div class="product_item">' +
         '<h3 class="item_name"></h3>' +
@@ -42,38 +42,80 @@ createOrderButton.addEventListener("click", (e) => {
 // ADD TO CART EVENT
 productList.addEventListener("click", (e) => {
     if (e.target.tagName == "BUTTON") {
+        let products = jsonObject.products;
         let parentNode = e.target.parentNode;
-        if (!parentNode.disabled) {
-            let productIndex = products.findIndex(x => x.name === parentNode.children[0].innerHTML);
-            let productName = products[productIndex].name;
-            let productAmount = parentNode.children[2].value;
-            let productPrice = products[productIndex].unit_price;
 
+        if (!parentNode.disabled) {
+            // .JSON info
+            // Find object with name
+            let productIndex = products.findIndex(x => x.name === parentNode.children[0].innerHTML);
+            
+            // Object info
+            let productName = products[productIndex].name;
+            let productPrice = products[productIndex].unit_price;
             let productStock = products[productIndex].stock;
-            if (productStock) {
-                if (productStock >= productAmount) {
-                    if (parentNode.children[2].value > 0) {
-                        cartTable.innerHTML += '<tr><td></td><td></td><td></td><td></td></tr>';
-                        cartTable.lastChild.children[0].innerHTML = productName;
-                        cartTable.lastChild.children[1].innerHTML = productAmount;
-                        cartTable.lastChild.children[2].innerHTML = productPrice
-                        cartTable.lastChild.children[3].innerHTML = productPrice * productAmount;
-                        totalPrice += productPrice * productAmount;
-                        totalPriceLabel.innerText = totalPrice;
-                    } else {
-                        alert("you must select the amount to buy");
-                        return;
+            let productAmount = parseInt(parentNode.children[2].value);
+
+            // Shopping cart handler
+            if (productStock) { // There is stock of the product?
+                if (productStock >= productAmount) { // True if there is enough stock of the product
+                    if (!shoppingCart.get(productName)) { // Create a new object if the product is not in the shopping cart
+                        shoppingCart.set(productName, {
+                            price: productPrice,
+                            stock: productStock,
+                            amount: productAmount
+                        });
+                        printProductList(shoppingCart, parentNode);
+                    } else { // Update the product amount of the object
+                        let newAmount = shoppingCart.get(productName).amount + productAmount;
+                        if (newAmount <= productStock) {
+                            shoppingCart.get(productName).amount = newAmount;
+                            if (parentNode.children[2].value > 0) {
+                                totalPrice = printProductList(shoppingCart);
+                                totalPriceLabel.innerText = totalPrice;
+                            }
+                        } else {
+                            alert(`There is no enough stock for you to buy, the max amount you can buy is ${productStock}`);
+                            if (shoppingCart.get(productName).amount == shoppingCart.get(productName).stock) {
+                                disableProduct(parentNode);
+                            }
+                        }
                     }
                 } else {
-                    alert(`There is no enough stock for you to buy, the max amount you can buy is ${productStock}`)
+                    alert("you must select the amount to buy");
                 }
             } else {
-                parentNode.classList.add("product_unavaliable");
-                parentNode.disabled = true;
-                parentNode.children[2].disabled = true;
-                parentNode.children[3].disabled = true;
+                disableProduct(parentNode);
                 alert("Sorry, at the moment there is no stock");
             }
         }
     }
 });
+
+const printProductList = (map) => {
+    let total = 0;
+    cartTable.innerHTML = '<tr>' +
+                                '<th>Product Name</th>' +
+                                '<th>Quantity</th>' +
+                                '<th>Unit Price</th>' +
+                                '<th>Total Price</th>' +
+                            '</tr>';
+
+    map.forEach((productName, key) => {
+        cartTable.innerHTML += '<tr><td></td><td></td><td></td><td></td></tr>';
+        cartTable.lastChild.children[0].innerHTML = key;
+        cartTable.lastChild.children[1].innerHTML = productName.amount;
+        cartTable.lastChild.children[2].innerHTML = productName.price
+        cartTable.lastChild.children[3].innerHTML = productName.price * productName.amount;
+        total += productName.price * productName.amount;
+    });
+    return total;
+}
+
+const disableProduct = (parentNode) => {
+    parentNode.classList.add("product_unavaliable");
+    parentNode.disabled = true;
+    parentNode.children[2].disabled = true;
+    parentNode.children[2].value = 0;
+    parentNode.children[3].disabled = true;
+}

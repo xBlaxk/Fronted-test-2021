@@ -4,7 +4,6 @@ const createOrderButton = document.getElementById("createOrderButton");
 const totalPriceLabel = document.getElementById("totalPriceLabel");
 let totalPrice = 0;
 let jsonObject;
-let products;
 let shoppingCart = new Map();
 
 // ON STARTUP

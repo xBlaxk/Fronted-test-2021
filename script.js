@@ -81,7 +81,7 @@ productList.addEventListener("click", (e) => {
                             disableProduct(parentNode);
                         }
                     }
-                    totalPriceLabel.innerText = totalPrice;
+                    totalPriceLabel.innerText = `$ ${totalPrice}`;
                 } else {
                     if (!productAmount) {
                         alert("you must select the amount to buy");

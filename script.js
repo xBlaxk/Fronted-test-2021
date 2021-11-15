@@ -9,10 +9,10 @@ let shoppingCart = new Map();
 // ON STARTUP
 console.log("post-Time");
 fetch("./data.json")
-    .then(function(resp) {
+    .then((resp) => {
         return resp.json();
     })
-    .then(function(data) {
+    .then((data) => {
         jsonObject = data;
         fillProductList(jsonObject.products);
     });
@@ -66,14 +66,13 @@ productList.addEventListener("click", (e) => {
                         if (shoppingCart.get(productName).stock == shoppingCart.get(productName).amount) {
                             disableProduct(parentNode);
                         }
-                        printProductList(shoppingCart, parentNode);
+                        totalPrice = printProductList(shoppingCart, parentNode);
                     } else { // Update the product amount of the object
                         let newAmount = shoppingCart.get(productName).amount + productAmount;
                         if (newAmount <= productStock) {
                             shoppingCart.get(productName).amount = newAmount;
                             if (parentNode.children[2].value > 0) {
                                 totalPrice = printProductList(shoppingCart);
-                                totalPriceLabel.innerText = totalPrice;
                             }
                         } else {
                             alert(`There is no enough stock for you to buy, the max amount you can buy is ${productStock}`);
@@ -82,6 +81,7 @@ productList.addEventListener("click", (e) => {
                             disableProduct(parentNode);
                         }
                     }
+                    totalPriceLabel.innerText = totalPrice;
                 } else {
                     if (!productAmount) {
                         alert("you must select the amount to buy");

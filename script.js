@@ -17,7 +17,6 @@ fetch("./data.json")
         fillProductList(jsonObject.products);
     });
 
-
 // FUNCTIONS
 // FILL THE LIST OF PRODUCTS
 function fillProductList(products) {
@@ -57,13 +56,16 @@ productList.addEventListener("click", (e) => {
 
             // Shopping cart handler
             if (productStock) { // There is stock of the product?
-                if (productStock >= productAmount) { // True if there is enough stock of the product
+                if (productStock >= productAmount && productAmount > 0) { // True if there is enough stock of the product
                     if (!shoppingCart.get(productName)) { // Create a new object if the product is not in the shopping cart
                         shoppingCart.set(productName, {
                             price: productPrice,
                             stock: productStock,
                             amount: productAmount
                         });
+                        if (shoppingCart.get(productName).stock == shoppingCart.get(productName).amount) {
+                            disableProduct(parentNode);
+                        }
                         printProductList(shoppingCart, parentNode);
                     } else { // Update the product amount of the object
                         let newAmount = shoppingCart.get(productName).amount + productAmount;
@@ -75,13 +77,17 @@ productList.addEventListener("click", (e) => {
                             }
                         } else {
                             alert(`There is no enough stock for you to buy, the max amount you can buy is ${productStock}`);
-                            if (shoppingCart.get(productName).amount == shoppingCart.get(productName).stock) {
-                                disableProduct(parentNode);
-                            }
+                        }
+                        if (shoppingCart.get(productName).stock == shoppingCart.get(productName).amount) {
+                            disableProduct(parentNode);
                         }
                     }
                 } else {
-                    alert("you must select the amount to buy");
+                    if (!productAmount) {
+                        alert("you must select the amount to buy");
+                    } else {
+                        alert(`There is no enough stock for you to buy, the max amount you can buy is ${productStock}`);
+                    }
                 }
             } else {
                 disableProduct(parentNode);

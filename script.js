@@ -2,40 +2,56 @@ const productList = document.getElementById("productList");
 const cartTable = document.getElementById("cartTable");
 const createOrderButton = document.getElementById("createOrderButton");
 const totalPriceLabel = document.getElementById("totalPriceLabel");
-let totalPrice = 0;
 let jsonObject;
 let shoppingCart = new Map();
+let orderMap = new Map();
+let totalPrice = 0;
 
 // ON STARTUP
 console.log("post-Time");
-fetch("./data.json")
-    .then((resp) => {
-        return resp.json();
-    })
-    .then((data) => {
-        jsonObject = data;
-        fillProductList(jsonObject.products);
-    });
-
-// FUNCTIONS
-// FILL THE LIST OF PRODUCTS
-function fillProductList(products) {
-    products.forEach((product) => {
-        productList.innerHTML += '<div class="product_item">' +
-        '<h3 class="item_name"></h3>' +
-        '<img class="item_image" src="img/Blaxk_logo.png" alt="RedBull">' +
-        '<input class="item_quantity" type="number" placeholder="0"></input>' +
-        '<button class="item_addButton">Add to cart</button>' +
-        '</div>';
-        productList.lastChild.children[0].innerHTML = product.name;
-    });
+try {
+    fetch("./data.json")
+        .then((resp) => {
+            return resp.json();
+        })
+        .then((data) => {
+            jsonObject = data;
+            fillProductList(jsonObject.products);
+        });
+} catch (err) {
+    console.error("There was a problem fetching the .JSON file");
 }
 
 // EVENT LISTENERS
 // CREATE ORDEN (.JSON)
 createOrderButton.addEventListener("click", (e) => {
-    console.log("Crear .JSON file");
-});
+    let orderPrice = 0
+    let order = {
+        productList: [],
+        orderPrice: 0
+    }
+
+    if (shoppingCart.size > 0) {
+        shoppingCart.forEach((product, key) => {
+            let productListItem = {
+                name: key,
+                amount: product.amount,
+                totalPrice: product.amount * product.price
+            }
+            order.productList.push(productListItem);
+            order.orderPrice += productListItem.totalPrice;
+        });
+        orderMap.set(orderMap.size + 1, order);
+        shoppingCart = new Map();
+        totalPrice = printShoppingCart(shoppingCart);
+        totalPriceLabel.innerText = `$ ${totalPrice}`;
+
+        console.log(Object.fromEntries(orderMap));
+    } else {
+        alert("The shopping cart is empty, try adding some products");
+    }
+})
+
 
 // ADD TO CART EVENT
 productList.addEventListener("click", (e) => {
@@ -57,7 +73,7 @@ productList.addEventListener("click", (e) => {
             // Shopping cart handler
             if (productStock) { // There is stock of the product?
                 if (productStock >= productAmount && productAmount > 0) { // True if there is enough stock of the product
-                    if (!shoppingCart.get(productName)) { // Create a new object if the product is not in the shopping cart
+                    if (!shoppingCart.get(productName)) { // Create a new map element if the product is not in the shopping cart
                         shoppingCart.set(productName, {
                             price: productPrice,
                             stock: productStock,
@@ -66,13 +82,13 @@ productList.addEventListener("click", (e) => {
                         if (shoppingCart.get(productName).stock == shoppingCart.get(productName).amount) {
                             disableProduct(parentNode);
                         }
-                        totalPrice = printProductList(shoppingCart, parentNode);
+                        totalPrice = printShoppingCart(shoppingCart, parentNode);
                     } else { // Update the product amount of the object
                         let newAmount = shoppingCart.get(productName).amount + productAmount;
                         if (newAmount <= productStock) {
                             shoppingCart.get(productName).amount = newAmount;
                             if (parentNode.children[2].value > 0) {
-                                totalPrice = printProductList(shoppingCart);
+                                totalPrice = printShoppingCart(shoppingCart);
                             }
                         } else {
                             alert(`There is no enough stock for you to buy, the max amount you can buy is ${productStock}`);
@@ -97,7 +113,21 @@ productList.addEventListener("click", (e) => {
     }
 });
 
-const printProductList = (map) => {
+// FUNCTIONS
+// FILL THE LIST OF PRODUCTS
+function fillProductList(products) {
+    products.forEach((product) => {
+        productList.innerHTML += '<div class="product_item">' +
+        '<h3 class="item_name"></h3>' +
+        '<img class="item_image" src="img/Blaxk_logo.png" alt="RedBull">' +
+        '<input class="item_quantity" type="number" placeholder="0"></input>' +
+        '<button class="item_addButton">Add to cart</button>' +
+        '</div>';
+        productList.lastChild.children[0].innerHTML = product.name;
+    });
+}
+
+const printShoppingCart = (map) => {
     let total = 0;
     cartTable.innerHTML = '<tr>' +
                                 '<th>Product Name</th>' +
@@ -114,6 +144,7 @@ const printProductList = (map) => {
         cartTable.lastChild.children[3].innerHTML = productName.price * productName.amount;
         total += productName.price * productName.amount;
     });
+
     return total;
 }
 

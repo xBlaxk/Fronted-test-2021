@@ -41,12 +41,12 @@ createOrderButton.addEventListener("click", (e) => {
             order.productList.push(productListItem);
             order.orderPrice += productListItem.totalPrice;
         });
-        orderMap.set(orderMap.size + 1, order);
+        orderMap.set(`Order #${orderMap.size + 1}`, order);
         shoppingCart = new Map();
         totalPrice = printShoppingCart(shoppingCart);
         totalPriceLabel.innerText = `$ ${totalPrice}`;
-
         console.log(Object.fromEntries(orderMap));
+        // alert(JSON.stringify(Object.fromEntries(orderMap), null, 4));
     } else {
         alert("The shopping cart is empty, try adding some products");
     }

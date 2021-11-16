@@ -1,0 +1,43 @@
+{
+    "orderNumber1" : {
+        "products": [
+            {
+                "name": "name",
+                "amount": 10,
+                "totalPrice": 500
+            },
+            {
+                "name2": "name",
+                "amount": 10,
+                "totalPrice": 500
+            },
+            {
+                "nam3": "name",
+                "amount": 10,
+                "totalPrice": 500
+            }
+        ],
+        "totalOrderPrice": 1500
+    },
+    "orderNumber2" : {
+        "products": [
+            {
+                "name": "name",
+                "amount": 10,
+                "totalPrice": 500
+            },
+            {
+                "name2": "name",
+                "amount": 10,
+                "totalPrice": 500
+            },
+            {
+                "nam3": "name",
+                "amount": 10,
+                "totalPrice": 500
+            }
+        ],
+        "totalOrderPrice": 1500
+    }
+
+}
